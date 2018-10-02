@@ -1,1 +1,109 @@
-# fever-baseline
+# CSC585 Algorithms for NLP 
+
+# Assignment 3
+
+* This repo is a simple runable instruction of [https://github.com/sheffieldnlp/fever-baselines]. More specifically, I choose to train the **Decomposable Attention model**. The MLP model also works, but due to the computing cost and time, I haven't trained that model. For the sampling method, I have some problem when I was trying to train both models with Nearest-Page Sampling for the NotEoughInfo class. That's why I choose **Random Sampling** for NotEoughInfo class even through they mention the performance is worse than the first one.
+
+## Full Credits
+* Please refer to the [https://github.com/sheffieldnlp/fever-baselines] for more details.
+
+## Pre-requisites
+* Although the origin repo provides the conda installation instruction, I think using [Docker](https://www.docker.com/) is preferred, To enable GPU acceleration (run with `--runtime=nvidia`) once [NVIDIA Docker has been installed](https://github.com/NVIDIA/nvidia-docker). For this task, training with only CPU takes days, for my own run, I choose a computer with a Nvidia 1080Ti Graphic Card. (Thanks, Mingwei)
+
+
+## Docker Install
+
+Download and run the latest FEVER. 
+```
+   $ docker volume create fever-data
+   $ docker run -it -v fever-data:/fever/data sheffieldnlp/fever-baselines
+```
+
+
+## Download Data
+
+### Wikipedia
+
+To download a pre-processed Wikipedia dump ([license](https://s3-eu-west-1.amazonaws.com/fever.public/license.html)):
+```
+   $ bash scripts/download-processed-wiki.sh
+```
+
+
+### Dataset
+
+Download the FEVER dataset from [their website](https://sheffieldnlp.github.io/fever/data.html) into the data directory:
+```
+   $ bash scripts/download-paper.sh
+```
+ 
+ 
+### Word Embeddings 
+  
+Download pretrained GloVe Vectors
+```
+   $ bash scripts/download-glove.sh
+```
+
+
+## Data Preparation
+
+Since I can't run nearest neighbor sampling using their code, I use random sampling method
+```
+   $ PYTHONPATH=src python src/scripts/dataset/neg_sample_evidence.py data/fever/fever.db
+```
+
+
+## Train DA
+Because of the cost of computing and time, I train the Decomposable Attention model with Random Sampling for the NEI class
+```
+   #if using a CPU, set
+   $ export CUDA_DEVICE=-1
+
+   #if using a GPU, set
+   $ export CUDA_DEVICE=0 #or cuda device id
+
+   # Using random sampled data for NotEnoughInfo (worse)
+   $ PYTHONPATH=src python src/scripts/rte/da/train_da.py data/fever/fever.db config/fever_rs_ora_sent.json logs/da_rs_sent --cuda-device $CUDA_DEVICE
+   $ mkdir -p data/models
+   $ cp logs/da_rs_sent/model.tar.gz data/models/decomposable_attention.tar.gz
+```
+
+## Evaluation
+
+These instructions are for the decomposable attention model.
+
+### Oracle Evaluation (no evidence retrieval):
+    
+Run the oracle evaluation for the Decomposable Attention model on the dev set (requires sampling the NEI class for the dev dataset - see [Data Preparation](#data-preparation))
+    
+   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/dev.ns.pages.p1.jsonl
+    
+
+### Evidence Retrieval Evaluation:
+
+First retrieve the evidence for the dev/test sets:
+```
+   #Dev
+   $ PYTHONPATH=src python src/scripts/retrieval/ir.py --db data/fever/fever.db --model data/index/fever-tfidf-ngram=2-hash=16777216-tokenizer=simple.npz --in-file data/fever-data/dev.jsonl --out-file data/fever/dev.sentences.p5.s5.jsonl --max-page 5 --max-sent 5
+    
+   #Test
+   $ PYTHONPATH=src python src/scripts/retrieval/ir.py --db data/fever/fever.db --model data/index/fever-tfidf-ngram=2-hash=16777216-tokenizer=simple.npz --in-file data/fever-data/test.jsonl --out-file data/fever/test.sentences.p5.s5.jsonl --max-page 5 --max-sent 5
+
+```
+Then run the model:
+```   
+   #Dev
+   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/dev.sentences.p5.s5.jsonl  --log data/decomposable_attention.dev.log
+    
+   #Test
+   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/test.sentences.p5.s5.jsonl  --log logs/decomposable_attention.test.log
+```
+
+## Scoring
+### Score locally (for dev set)  
+Score:
+```
+   $ PYTHONPATH=src python src/scripts/score.py --predicted_labels data/decomposable_attention.dev.log --predicted_evidence data/fever/dev.sentences.p5.s5.jsonl --actual data/fever-data/dev.jsonl
+```
+ 
