@@ -8,7 +8,7 @@
 * Please refer to the [https://github.com/sheffieldnlp/fever-baselines] for more details.
 
 ## Pre-requisites
-* Although the origin repo provides the conda installation instruction, I think using [Docker](https://www.docker.com/) is preferred, To enable GPU acceleration (run with `--runtime=nvidia`) once [NVIDIA Docker has been installed](https://github.com/NVIDIA/nvidia-docker). For this task, training with only CPU takes days, for my own run, I choose a computer with a Nvidia 1080Ti Graphic Card. (Thanks, Mingwei)
+* Although the origin repo provides the conda installation instruction, I think using [Docker](https://www.docker.com/) is preferred, To enable GPU acceleration (run with `--runtime=nvidia`) once [NVIDIA Docker has been installed](https://github.com/NVIDIA/nvidia-docker). For this task, training with only CPU takes days, for my own run, I choose a computer with a Nvidia 1080Ti Graphic Card. (Thanks to Mingwei and his awesome computer)
 
 
 ## Docker Install
