@@ -72,13 +72,7 @@ Because of the cost of computing and time, I train the Decomposable Attention mo
 ## Evaluation
 
 These instructions are for the decomposable attention model.
-
-### Oracle Evaluation (no evidence retrieval):
-    
-Run the oracle evaluation for the Decomposable Attention model on the dev set (requires sampling the NEI class for the dev dataset - see [Data Preparation](#data-preparation))
-    
-   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/dev.ns.pages.p1.jsonl
-    
+ 
 
 ### Evidence Retrieval Evaluation:
 
@@ -97,7 +91,7 @@ Then run the model:
    $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/dev.sentences.p5.s5.jsonl  --log data/decomposable_attention.dev.log
     
    #Test
-   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/test.sentences.p5.s5.jsonl  --log logs/decomposable_attention.test.log
+   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/test.sentences.p5.s5.jsonl  --log data/decomposable_attention.test.log
 ```
 
 ## Scoring
