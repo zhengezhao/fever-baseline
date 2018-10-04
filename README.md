@@ -2,7 +2,7 @@
 
 # Assignment 3
 
-* This repo is a simple runable instruction of [https://github.com/sheffieldnlp/fever-baselines]. More specifically, I choose to train the **Decomposable Attention model**. The MLP model also works, but due to the computing cost and time, I haven't trained that model. For the sampling method, I have some problem when I was trying to train both models with Nearest-Page Sampling for the NotEoughInfo class. That's why I choose **Random Sampling** for NotEoughInfo class even through they mention the performance is worse than the first one.
+* This repo is a simple runable instruction of [https://github.com/sheffieldnlp/fever-baselines]. More specifically, I choose to train the **Decomposable Attention model**. The MLP model also works, but due to the computing cost and time, I haven't trained that model. For the sampling method for NotEnoughINfo class, I tried both **Nearest-Page Sampling** and **Random Sampling**, you can choose either one of them to run.
 
 ## Full Credits
 * Please refer to the [https://github.com/sheffieldnlp/fever-baselines] for more details.
@@ -47,15 +47,27 @@ Download pretrained GloVe Vectors
 
 
 ## Data Preparation
+If you choose **Nearest-Page Sampling**
+```
+   $ PYTHONPATH=src python src/scripts/retrieval/document/batch_ir_ns.py --model data/index/fever-tfidf-ngram=2-hash=16777216-tokenizer=simple.npz --count 1 --split train
+   $ PYTHONPATH=src python src/scripts/retrieval/document/batch_ir_ns.py --model data/index/fever-tfidf-ngram=2-hash=16777216-tokenizer=simple.npz --count 1 --split dev
+```
 
-Since I can't run nearest neighbor sampling using their code, I use random sampling method
+If you choose **Random sampling**
 ```
    $ PYTHONPATH=src python src/scripts/dataset/neg_sample_evidence.py data/fever/fever.db
 ```
 
 
 ## Train DA
-Because of the cost of computing and time, I train the Decomposable Attention model with Random Sampling for the NEI class
+If you choose **Nearest-Page Sampling**
+```
+PYTHONPATH=src python src/scripts/rte/da/train_da.py data/fever/fever.db config/fever_nn_ora_sent.json logs/da_nn_sent --cuda-device $CUDA_DEVICE
+mkdir -p data/models
+cp logs/da_nn_sent/model.tar.gz data/models/decomposable_attention.tar.gz
+```
+
+If you choose **Random Sampling**
 ```
    #if using a CPU, set
    $ export CUDA_DEVICE=-1
