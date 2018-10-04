@@ -87,7 +87,19 @@ If you choose **Random Sampling**
 ## Evaluation
 
 These instructions are for the decomposable attention model.
- 
+
+### Oracle Evaluation on Dev set(no evidence retrieval):
+
+
+If you choose **Nearest-Page Sampling**
+```
+   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/dev.ns.pages.p1.jsonl
+```
+
+If you choose **Random Sampling**
+``` 
+   $ PYTHONPATH=src python src/scripts/rte/da/eval_da.py data/fever/fever.db data/models/decomposable_attention.tar.gz data/fever/dev.ns.rand.jsonl
+```
 
 ### Evidence Retrieval Evaluation:
 
