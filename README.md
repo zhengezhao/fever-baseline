@@ -60,6 +60,14 @@ If you choose **Random sampling**
 
 
 ## Train DA
+```
+   #if using a CPU, set
+   $ export CUDA_DEVICE=-1
+
+   #if using a GPU, set
+   $ export CUDA_DEVICE=0 #or cuda device id
+```
+Notice that the model has the same file name for both of two sampling methods, so you want to run both of them, make sure you change the file name of the model.
 If you choose **Nearest-Page Sampling**
 ```
 PYTHONPATH=src python src/scripts/rte/da/train_da.py data/fever/fever.db config/fever_nn_ora_sent.json logs/da_nn_sent --cuda-device $CUDA_DEVICE
@@ -69,12 +77,6 @@ cp logs/da_nn_sent/model.tar.gz data/models/decomposable_attention.tar.gz
 
 If you choose **Random Sampling**
 ```
-   #if using a CPU, set
-   $ export CUDA_DEVICE=-1
-
-   #if using a GPU, set
-   $ export CUDA_DEVICE=0 #or cuda device id
-
    # Using random sampled data for NotEnoughInfo (worse)
    $ PYTHONPATH=src python src/scripts/rte/da/train_da.py data/fever/fever.db config/fever_rs_ora_sent.json logs/da_rs_sent --cuda-device $CUDA_DEVICE
    $ mkdir -p data/models
