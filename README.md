@@ -68,6 +68,7 @@ If you choose **Random sampling**
    $ export CUDA_DEVICE=0 #or cuda device id
 ```
 Notice that the model has the same file name for both of two sampling methods, so you want to run both of them, make sure you change the file name of the model.
+
 If you choose **Nearest-Page Sampling**
 ```
 PYTHONPATH=src python src/scripts/rte/da/train_da.py data/fever/fever.db config/fever_nn_ora_sent.json logs/da_nn_sent --cuda-device $CUDA_DEVICE
