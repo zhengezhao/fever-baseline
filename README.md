@@ -122,9 +122,14 @@ Then run the model:
 ```
 
 ## Scoring
-### Score locally (for dev set)  
-Score:
+### Score locally   
+Score for dev set:
 ```
    $ PYTHONPATH=src python src/scripts/score.py --predicted_labels data/decomposable_attention.dev.log --predicted_evidence data/fever/dev.sentences.p5.s5.jsonl --actual data/fever-data/dev.jsonl
 ```
+Score for test set:
+```
+   $ PYTHONPATH=src python src/scripts/score.py --predicted_labels data/decomposable_attention.test.log --predicted_evidence data/fever/test.sentences.p5.s5.jsonl --actual data/fever-data/test.jsonl
+```
+
  
